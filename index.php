@@ -1,16 +1,10 @@
 <?php
 require 'Task.php';
+require 'functions.php';
 
-try {
-    $pdo = new PDO('mysql:host=localhost;dbname=test_php_tutorials', 'root', '');
-} catch (PDOException $e) {
-    echo $e->getMessage();
-    exit;
-}
+$pdo = connectToDb();
 
-$query = $pdo->prepare('SELECT * FROM todos');
-$query->execute();
-$tasks = $query->fetchAll(PDO::FETCH_CLASS, 'Task');
+$tasks = fetchAllTasks($pdo);
 
 
 
