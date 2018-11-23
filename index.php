@@ -12,6 +12,7 @@
         ?>
         <li><?php echo $todo->getTitle() ?></li>
         <?php
+
         }
     }
     ?>
