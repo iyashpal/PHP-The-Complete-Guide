@@ -20,7 +20,7 @@ class Application {
     public function getUrl($abs_path = null)
     {
         if ($abs_path) {
-            return $this->appUrl .'/'. ltrim($abs_path, '/');
+            return rtrim($this->appUrl, '/') .'/'. ltrim($abs_path, '/');
         }
         return $this->appUrl;
     }
@@ -28,7 +28,7 @@ class Application {
     public function getBasePath($abs_path = null)
     {
         if ($abs_path) {
-            return $this->basePath .'/'. ltrim($abs_path, '/');
+            return rtrim($this->basePath, '/') .'/'. ltrim($abs_path, '/');
         }
         return $this->basePath;
     }
