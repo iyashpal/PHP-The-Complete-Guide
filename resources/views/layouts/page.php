@@ -31,6 +31,9 @@ if (isset($_GET['view'])) {
     }
 
 } else {
+    $templateParts['header'] =  $app->getBasePath(
+        'resources/views/layouts/welcome-header.php'
+    );
     $templateParts['page'] = $app->getBasePath(
         "resources/views/welcome.view.php"
     );
