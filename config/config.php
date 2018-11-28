@@ -1,6 +1,10 @@
 <?php
 
 return [
+    'app'=>[
+        'url'=>'http://localhost:8080/',
+        'basePath'=>realpath(__DIR__.'/../'),
+    ],
     'database'=>[
                 'name'=>'test_php_tutorials',
                 'username'=>'root',
