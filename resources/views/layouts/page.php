@@ -5,12 +5,19 @@ $templateParts = array(
     'page'=>'',
     'footer'=>$app->getBasePath('resources/views/layouts/footer.php'),
 );
+$isError = '';
 
 
 if (isset($_GET['view'])) {
+    $controllerName = $app->parseControllerName(ucfirst($_GET['view']));
+    $viewName = strtolower($_GET['view']);
+
+    $isControllerExists = file_exists(
+        $app->generateController($controllerName, @$_GET['generate'])
+    );
 
     $Controller = $app->getBasePath(
-        "app/controllers/".ucfirst($_GET['view'])."Controller.php"
+        "app/controllers/" . $controllerName ."Controller.php"
     );
     // Check for controllers
     if (file_exists($Controller)) {
@@ -18,7 +25,7 @@ if (isset($_GET['view'])) {
     }
 
     $view = $app->getBasePath(
-        "resources/views/".strtolower($_GET['view']).".view.php"
+        "resources/views/". $viewName .".view.php"
     );
     $error = $app->getBasePath(
         "resources/views/errors/404.error.php"
@@ -28,6 +35,7 @@ if (isset($_GET['view'])) {
         $templateParts['page'] = $view;
     } else {
         $templateParts['page'] = $error;
+        $isError = '404';
     }
 
 } else {
@@ -41,7 +49,12 @@ if (isset($_GET['view'])) {
 
 foreach($templateParts as $template)
 {
-    if ($template !== '') {
+    if ($template !== '' & $isError == '') {
         require $template;
+    } else {
+        switch($isError) {
+            case '404' :
+                require $app->getViewsDir(). "errors/{$isError}.error.php";
+        }
     }
 }

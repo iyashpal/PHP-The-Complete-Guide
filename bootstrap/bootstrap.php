@@ -6,12 +6,10 @@ spl_autoload_register(
     }
 );
 
+// Load all helpers
+require_once __DIR__.'/../app/supports/helpers.php';
+
+
 $config = include __DIR__ . '/../config/config.php';
 
 return  new Application($config);
-
-// $config = include 'config.php';
-
-// return new QueryBuilder(
-//     Connection::make($config['database'])
-// );
