@@ -4,6 +4,10 @@ class QueryBuilder
 {
     protected $pdo;
 
+    protected $where;
+
+    protected $table;
+
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
@@ -14,9 +18,9 @@ class QueryBuilder
      *
      * @return mixed
      */
-    public function selectAll($table, $class = null)
+    public function select($class = null)
     {
-        $query = $this->pdo->prepare("SELECT * FROM {$table}");
+    $query = $this->pdo->prepare("SELECT * FROM {$this->table} {$this->where}");
         $query->execute();
         if ($class) {
             return $query->fetchAll(PDO::FETCH_CLASS, 'Task');
@@ -30,7 +34,7 @@ class QueryBuilder
      *
      * @return boolean
      */
-    public function create($table, array $data)
+    public function create(array $data)
     {
         $columns = implode(', ', array_keys($data));
         $values = implode(
@@ -42,7 +46,42 @@ class QueryBuilder
                 $data
             )
         );
-        $query = $this->pdo->prepare("INSERT INTO {$table} ({$columns}) VALUES ($values)");
+        $query = $this->pdo->prepare("INSERT INTO {$this->table} ({$columns}) VALUES ($values)");
         return $query->execute();
+    }
+
+    /**
+     *  Set up where clouses
+     *
+     * @param mixed $key   Column name of whereclouse
+     * @param mixed $value Value of whereclouse
+     *
+     * @return QueryBuilder
+     */
+    public function where($key, $value = null)
+    {
+        $this->where .= "WHERE 1 ";
+        if (is_array($key)) {
+            foreach ($key as $column => $value) {
+                $this->where .= " AND {$column}=\"{$value}\"";
+            }
+            return $this;
+        }
+
+        $this->where .= " AND {$key}=\"{$value}\"";
+        return $this;
+    }
+
+    /**
+     * Setup query builder table
+     *
+     * @param string $table Table name of querybuilder
+     *
+     * @return object
+     */
+    public function table($table)
+    {
+        $this->table = $table;
+        return $this;
     }
 }

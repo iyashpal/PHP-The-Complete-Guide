@@ -1,3 +1,5 @@
 <?php
 
-$tasks = $DB->selectAll('todos', 'Task');
+$tasks = $DB->table('todos')
+    // ->where('title', 'Wash car')
+    ->select('Task');

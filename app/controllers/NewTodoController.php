@@ -1,9 +1,7 @@
 <?php
 
 if (isset($_POST['new-todo'])) {
-    $isCreated = $DB->create(
-        // Table name
-        'todos',
+    $isCreated = $DB->table('todos')->create(
         // Table insert data
         array(
             'title'=> $_POST['title'],
