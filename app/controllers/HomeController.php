@@ -1,5 +1,9 @@
 <?php
 
+if (!auth()) {
+    header('Location:'. $app->getUrl('?view=login'));
+}
+
+
 $tasks = $DB->table('todos')
-    // ->where('title', 'Wash car')
-    ->select('Task');
+    ->get();

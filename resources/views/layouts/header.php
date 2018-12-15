@@ -38,7 +38,7 @@
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link disabled" href="#">Disabled</a>
+                    <a class="nav-link" href="<?php echo $app->getUrl('?view=logout'); ?>">Logout</a>
                 </li>
                 </ul>
             </div>

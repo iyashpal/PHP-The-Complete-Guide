@@ -92,7 +92,10 @@ class Application {
     {
         $filePath = $this->getControllerDir() . "{$controller_name}Controller.php";
         if ($generate && !file_exists($filePath)) {
-            if (file_put_contents($filePath, '<?php ')) {
+            $controller = file_get_contents(
+                $this->getBasePath('/app/core/stubs/Controller.stub')
+            );
+            if (file_put_contents($filePath, $controller)) {
                 return $filePath;
             }
         }

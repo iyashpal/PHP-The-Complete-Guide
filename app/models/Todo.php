@@ -1,6 +1,6 @@
 <?php
 
-class Task
+class Todo
 {
     protected $id;
 

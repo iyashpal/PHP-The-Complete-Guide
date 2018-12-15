@@ -8,9 +8,27 @@ class QueryBuilder
 
     protected $table;
 
+    protected $select;
+
+    protected $class;
+
     public function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
+    }
+
+
+    /**
+     * Function to specify the columns for results
+     *
+     * @param array $args Column names
+     *
+     * @return mixed
+     */
+    public function select(...$args)
+    {
+        $this->select = join(', ', $args);
+        return $this;
     }
 
     /**
@@ -18,15 +36,38 @@ class QueryBuilder
      *
      * @return mixed
      */
-    public function select($class = null)
+    public function get()
     {
-    $query = $this->pdo->prepare("SELECT * FROM {$this->table} {$this->where}");
+        $query = $this->pdo->prepare(
+            "SELECT " . ($this->select ? $this->select : '*') . " FROM {$this->table} {$this->where}"
+        );
         $query->execute();
-        if ($class) {
-            return $query->fetchAll(PDO::FETCH_CLASS, 'Task');
-        } else {
-            return $query->fetchAll(PDO::FETCH_OBJ);
+        if (class_exists($this->class)) {
+            return $query->fetchAll(
+                PDO::FETCH_CLASS, $this->class
+            );
         }
+        return $query->fetchAll(
+            PDO::FETCH_OBJ
+        );
+
+    }
+    /**
+     * Get all data from table.
+     *
+     * @return mixed
+     */
+    public function first()
+    {
+        $query = $this->pdo->prepare(
+            "SELECT " . ($this->select ? $this->select : '*') . " FROM {$this->table} {$this->where}"
+        );
+        $query->execute();
+
+        return $query->fetchObject(
+            class_exists($this->class) ? $this->class : ''
+        );
+
     }
 
     /**
@@ -82,6 +123,7 @@ class QueryBuilder
     public function table($table)
     {
         $this->table = $table;
+        $this->class = ucfirst(str_singular($table));
         return $this;
     }
 }
